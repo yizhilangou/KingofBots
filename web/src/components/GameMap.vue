@@ -7,17 +7,19 @@
 <script>
 import { GameMap } from "../assets/scripts/GameMap";
 import { ref, onMounted } from "vue";
+import { useStore } from "vuex";
 export default {
     setup() {
+        const store = useStore();
         const parent = ref(null);
         let canvas = ref(null);
         // 创建页面时执行该函数
         onMounted(() => {
             // 创建游戏地图，将画布与地图dom传入地图对象
-            new GameMap(canvas.value.getContext('2d'), parent.value);
+            new GameMap(canvas.value.getContext('2d'), parent.value,store);
         });
 
-        return {
+        return { 
             parent,
             canvas,
         }
