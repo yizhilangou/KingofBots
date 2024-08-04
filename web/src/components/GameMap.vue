@@ -16,7 +16,10 @@ export default {
         // 创建页面时执行该函数
         onMounted(() => {
             // 创建游戏地图，将画布与地图dom传入地图对象
-            new GameMap(canvas.value.getContext('2d'), parent.value,store);
+            store.commit(
+                "updateGameObject",
+                new GameMap(canvas.value.getContext('2d'), parent.value,store)
+            )
         });
 
         return { 
