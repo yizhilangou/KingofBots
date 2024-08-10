@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/user/account/token/", "/user/account/register/").permitAll()
                         .requestMatchers("/pk/start/game/").permitAll()
+                        .requestMatchers("/pk/receive/bot/move/").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated());
 
