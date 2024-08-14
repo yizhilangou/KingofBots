@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.kob.backend.consumer.WebSocketServer;
 import com.kob.backend.pojo.Bot;
 import com.kob.backend.pojo.Record;
+import com.kob.backend.pojo.User;
 import netscape.javascript.JSObject;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -169,7 +170,7 @@ public class Game extends Thread{
                 me.getStepsString() + ")#" +
                 you.getSx() + "#" +
                 you.getSy() + "#(" +
-                you.getStepsString() + ")#" ;
+                you.getStepsString() + ")";
     }
 
     private void sendBotCode(Player player){
@@ -271,18 +272,37 @@ public class Game extends Thread{
 
     }
 
-    private String getMapString(){
+    private String getMapString() {
         StringBuilder res = new StringBuilder();
-        for (int i=0;i<rows;i++)
-        {
-            for(int j=0;j<cols;j++){
+        for (int i = 0; i < rows; i ++ ) {
+            for (int j = 0; j < cols; j ++ ) {
                 res.append(g[i][j]);
             }
         }
         return res.toString();
     }
 
+    private void updateUserRating(Player player,Integer rating){
+        User user = WebSocketServer.userMapper.selectById(player.getId());
+        user.setRating(rating);
+        WebSocketServer.userMapper.updateById(user);
+    }
+
     private void saveToDatabase(){
+        Integer ratingA = WebSocketServer.userMapper.selectById(playerA.getId()).getRating();
+        Integer ratingB = WebSocketServer.userMapper.selectById(playerB.getId()).getRating();
+
+        if ("A".equals(loser)) {
+            ratingA -= 2;
+            ratingB += 5;
+        } else if ("B".equals(loser)) {
+            ratingA += 5;
+            ratingB -= 2;
+        }
+
+        updateUserRating(playerA, ratingA);
+        updateUserRating(playerB, ratingB);
+
         Record record = new Record(
                 null,
                 playerA.getId(),

@@ -21,6 +21,7 @@ export default {
         const socketUrl = `ws://localhost:3000/websocket/${store.state.user.token}/`;
 
         store.commit("updateLoser","none");
+        store.commit("updateIsRecord",false);
 
         let socket = null;
         onMounted(() => {
@@ -43,8 +44,8 @@ export default {
                     });
                     setTimeout(() => {
                         store.commit('updateStatus','playing');
-                    },2000);
-                    store.commit('updateGamemap',data.game);
+                    },200);
+                    store.commit('updateGame',data.game);
                 }else if(data.event === "move"){
                     console.log(data); 
                     const game = store.state.pk.gameObject;
@@ -68,12 +69,12 @@ export default {
             }
             socket.onclose = () => {
                 console.log("disconnected");
-                store.commit('updateStatus','matching');
             }
         }),
 
         onUnmounted(() => {
             socket.close();
+            store.commit('updateStatus','matching');
         })
     }
 }
